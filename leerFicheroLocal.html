@@ -1,0 +1,42 @@
+<!-- https://developer.mozilla.org/es/docs/Web/API/FileReader -->
+<html>
+    <head>
+    <script>
+      var openFile = function(event) {
+        var input = event.target;
+
+        var reader = new FileReader();
+        reader.onload = function(){
+          var text = reader.result;
+          var node = document.getElementById('output');
+          node.innerText = text;
+          console.log(reader.result.substring(0, 200));
+        };
+        reader.readAsText(input.files[0]);
+      };
+    </script>
+    </head>
+    <body>
+    <input type='file' accept='text/plain' onchange='openFile(event)'><br>
+    <div id='output'>
+ 
+    </div>
+<input type="button" value="Grabar" onclick="save()">
+    </body>
+<script>
+ 
+function save() {
+var node = document.getElementById('output');
+alert(  node.innerText );
+  var htmlContent = [node.innerText];
+  var bl = new Blob(htmlContent, {type: "text/html"});
+  var a = document.createElement("a");
+  a.href = URL.createObjectURL(bl);
+  a.download = "your-download-name-here.html";
+  a.hidden = true;
+  document.body.appendChild(a);
+  a.innerHTML = "something random - nobody will see this, it doesn't matter what you put here";
+  a.click();
+}
+</script>
+    </html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+
+        <title>CRUD Formato Formulario</title>
+       <link href="estilo.css" rel="stylesheet" media="screen">
+     
+        <script type="text/javascript"
+                src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBeNRBEIWYeWRRvY8On_9pkSD1_J_zLykQ&libraries=geometry">
+
+        </script>
+        
+       
+        <script type="text/javascript">
+
+            
+            var map = null;
+
+            var pos = 0;
+            var murallas = new Array();
+
+            var fileName = "img/bandera.jpg";
+
+            var entrar = document.getElementById("imagen1");
+            var contadorImagenes=0;
+ 
+            var array_marcadores = new Array();
+
+
+
+            function inicio()
+            {
+               
+                map = new google.maps.Map(
+                document.getElementById('map_canvas'), {
+            // En el mapa se visualiza el mapa correspondiente a esta latitud, longitud
+            center: new google.maps.LatLng(41.709637, -3.588538), //latitud,longitud),//
+            zoom: 16, // zoom del mapa
+            draggableCursor: 'auto', // forma del cursor
+            draggingCursor: 'crosshair',
+            mapTypeId: google.maps.MapTypeId.SATELLITE // tipo de mama
+        });
+    
+        
+      
+    
+        Paso2();
+    }
+    
+    function Paso2()
+    {
+        // Evento click en el mapa
+        google.maps.event.addListener(map, 'click', function (event) {
+            datolatitud_longitud = event.latLng.toString();
+            // Obtiene la longitud y la latitud correspondiente al clic 
+            // y copia los datos en cajas de texto
+         //   leeDireccion(event.latLng);
+          
+            // Crear marcado
+           
+  var image = {
+  url: fileName,
+  size: new google.maps.Size(25, 25),
+  origin: new google.maps.Point(0, 0),
+  anchor: new google.maps.Point(10, 10),
+  scaledSize: new google.maps.Size(25, 25)
+};
+            marker = new google.maps.Marker({
+                position: event.latLng,               
+                icon: image,
+                identificador:pos,                      
+                map: map
+                
+            });
+            array_marcadores.push(marker);
+    //añadimos evento click en el marcador
+	google.maps.event.addListener(marker, 'click', function()
+	{
+	  for(var a=0;a<array_marcadores.length;a++)
+	  	{
+		  if(array_marcadores[a][ 'identificador'] == this.identificador)
+		  {
+		  array_marcadores[a].setMap(null); //borramos el marcador del mapa
+		  array_marcadores.splice(a, 1) //borramos el marcador de nuestro array	
+		  }
+	  	}
+});
+
+
+
+          //  alert(datolatitud_longitud);
+    
+            murallas[pos] = datolatitud_longitud;
+            pos = pos + 1;
+        });
+        //----
+    }
+
+   
+   function   seleccionaImagen(imagen)
+   {
+     fileName=imagen.src;
+
+   }       
+  </script>
+
+    </head>
+
+    <body onLoad="inicio()">
+        <div style="position: absolute; left: 432px; width:63%; top:  56px; height: 480px;z-index: 2" id="map_canvas">
+
+            &nbsp;</div>
+    
+    <table tyle="position: absolute; left: 10px; width:30%; top:  56px; height: 480px " >
+       <tr>
+          <td  colspan="2"> Nombre del Habitat a Crear</td>
+          <td colspan="2"><input type="text" id="nHabitat"></td>
+       </tr>
+       <tr>
+        <td  colspan="2">Busca Imagen Animal</td>
+        <td colspan="2"><input id="ficheroLeidoDeDisco" type='file' accept='image/*' onchange='openFile(event)'></td>
+    </tr>
+    <tr>
+        <td  colspan="4">  <div id='output'>    </div></td>
+    </tr>
+        <tr>
+            <td><img src="./imagenes/habitat.jpg" id="imagen1" onclick="seleccionaImagen(this)"></img></td>
+            <td><img src="./imagenes/habitat.jpg" id="imagen2" onclick="seleccionaImagen(this)"></img></td>
+            <td><img src="./imagenes/habitat.jpg" id="imagen3" onclick="seleccionaImagen(this)"></img></td>
+            <td><img src="./imagenes/habitat.jpg" id="imagen4" onclick="seleccionaImagen(this)"></img></td>
+        </tr>
+        <tr>
+            <td><img src="./imagenes/habitat.jpg" id="imagen5" onclick="seleccionaImagen(this)"></img></td>
+            <td><img src="./imagenes/habitat.jpg" id="imagen6" onclick="seleccionaImagen(this)"></img></td>
+            <td><img src="./imagenes/habitat.jpg" id="imagen7" onclick="seleccionaImagen(this)"></img></td>
+            <td><img src="./imagenes/habitat.jpg" id="imagen8" onclick="seleccionaImagen(this)"></img></td>
+        </tr>
+        <tr>
+            <td  colspan="1">Grabar  Habitat  </td>
+            <td colspan="1"><input type="button" id="gHabitat" value="GRABAR" onclick="grabarHabitat()"></td>
+            <td  colspan="1">Leer Habitat  </td>
+            <td colspan="1"><input id="leerFicheroHabitat" type='file' accept='text/html' onchange='leerHabitat(event)'></td>
+        
+        </tr>
+    </table>
+    <script>
+
+        //https://developer.mozilla.org/es/docs/Web/API/File/Using_files_from_web_applications
+ var openFile = function(event) {
+          var input = event.target;
+            var nombreImagen=input.files[0].name;
+            contadorImagenes++;
+          var imagenAañadir= document.getElementById("imagen"+contadorImagenes);
+          imagenAañadir.src="./imagenes/"+nombreImagen;
+          var node = document.getElementById('output');
+          var textoListaImagenes= node.innerText
+          node.innerText =  textoListaImagenes+","+ nombreImagen 
+        
+      };
+
+      function grabarHabitat(){
+        var node = document.getElementById('output');
+        
+        var htmlContent = [node.innerText];
+        var bl = new Blob(htmlContent, {type: "text/html"});
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(bl);
+        var nombreHabitat=document.getElementById('nHabitat').value;
+      
+        a.download = nombreHabitat+".txt";
+        a.hidden = true;
+        document.body.appendChild(a);
+        a.innerHTML = htmlContent;
+        a.click();
+      }
+      function leerHabitat(event){
+
+        var input = event.target;
+
+        var reader = new FileReader();
+        reader.onload = function(){
+          var textoimagenesHabitat = reader.result;
+          var array_imagenesHabitat = new Array();
+          array_imagenesHabitat=textoimagenesHabitat.split(",");
+          for (i=1;i<array_imagenesHabitat.length;i++)
+          {
+            
+            var imagen=document.getElementById('imagen'+i);
+            var rcccc=array_imagenesHabitat[i];
+            rcccc=rcccc.trim();
+            var cadenaurl="imagenes\\"+  rcccc;
+            imagen.src=cadenaurl;
+            alert( imagen.src)
+          }
+        };
+        reader.readAsText(input.files[0]);
+
+      }
+    </script>
+    </body>
